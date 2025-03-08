@@ -18,6 +18,10 @@ public class OrderService {
         emailService = EmailService.getInstance();
     }
 
+    public void setEmailService(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
     void placeOrder(Order order) {
         double priceWithTax = order.getPrice() * 20 / 100;
         order.setPriceWithTax(priceWithTax);
