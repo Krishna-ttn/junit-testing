@@ -33,7 +33,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void testPlaceOrder_Exception() {
+    void testPlaceOrder_EmailSent_Failure() {
         doThrow(new RuntimeException("An Exception Occurred"))
                 .when(mockEmailService).sendEmail(any(Order.class));
 
@@ -51,6 +51,16 @@ class OrderServiceTest {
         assertTrue(result);
         assertTrue(order.isCustomerNotified());
         assertEquals(1200.0, order.getPriceWithTax());
+        verify(mockEmailService, times(1)).sendEmail(order, "krishna@gmail.com");
+    }
+    @Test
+    void testPlaceOrderWithCC_Failure() {
+        when(mockEmailService.sendEmail(any(Order.class), anyString())).thenReturn(false);
+
+        boolean result = orderService.placeOrder(order, "krishna@gmail.com");
+
+        assertFalse(result);
+        assertFalse(order.isCustomerNotified());
         verify(mockEmailService, times(1)).sendEmail(order, "krishna@gmail.com");
     }
 
